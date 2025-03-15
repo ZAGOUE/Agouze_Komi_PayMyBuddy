@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Tableau de Bord - Pay My Buddy</title>
+
+    <!-- Lien vers Bootstrap -->
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+    <script th:src="@{/js/bootstrap.bundle.min.js}" defer></script>
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container">
+        <a class="navbar-brand" href="#">Pay My Buddy</a>
+        <div class="collapse navbar-collapse">
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="/transactions">Transactions</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/deposit">Déposer</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/transfer">Transférer</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link btn btn-danger text-white" href="/logout">Déconnexion</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<div class="container mt-4">
+    <h2>Bienvenue, <span th:text="${user.firstName}">Utilisateur</span> !</h2>
+    <p>Votre solde : <strong th:text="${user.balance}">0.00</strong> €</p>
+
+    <a href="/transfer" class="btn btn-primary">Effectuer un transfert</a>
+</div>
+
+</body>
+</html>

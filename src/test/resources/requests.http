@@ -1,0 +1,75 @@
+### GET request to example server
+GET https://examples.http-client.intellij.net/get
+    ?generated-in=IntelliJ IDEA
+
+
+### LOGIN ADMIN
+POST http://localhost:8080/auth/login
+Content-Type: application/x-www-form-urlencoded
+
+email=admin@example.com&password=adminPass123
+
+
+
+### LOGIN USER
+POST http://localhost:8080/auth/login
+Content-Type: application/x-www-form-urlencoded
+
+email=testuser@example.com&password=securePass123
+
+### CREER UN UTILISATEUR USER
+POST http://localhost:8080/users/register
+Content-Type: application/json
+
+{
+  "email": "user@example.com",
+  "password": "userPass123",
+  "firstName": "User",
+  "lastName": "Test",
+  "balance": 100.00,
+  "role": "ROLE_USER"
+}
+### CREER UN UTILISATEUR ADMIN
+POST http://localhost:8080/users/register
+Content-Type: application/json
+
+{
+  "email": "admin2@example.com",
+  "password": "admin2Pass123",
+  "firstName": "Admin",
+  "lastName": "SuperUser",
+  "balance": 500.00,
+  "role": "ROLE_ADMIN"
+}
+
+### FAIRE UN DEPOT PAR UN USER  -  OK
+POST http://localhost:8080/deposits/add
+Authorization: Basic dXNlckBleGFtcGxlLmNvbTp1c2VyUGFzczEyMw==
+Content-Type: application/x-www-form-urlencoded
+
+amount=50.00
+
+
+### TRANSFERER DE L'ARGENT  - OK
+POST http://localhost:8080/transactions/transfer
+Authorization: Basic dXNlckBleGFtcGxlLmNvbTp1c2VyUGFzczEyMw==
+Content-Type: application/x-www-form-urlencoded
+
+receiverEmail=admin@example.com&amount=20.00&description=Paiement test
+
+
+
+
+### VERIFIER L'UTILISATEUR  -  OK
+GET http://localhost:8080/users/me
+Authorization: Basic dXNlckBleGFtcGxlLmNvbTp1c2VyUGFzczEyMw==
+
+
+### VERIFICATION DES TRANSACTIONS ENVOYEES - OK
+GET http://localhost:8080/transactions/sent
+Authorization: Basic dXNlckBleGFtcGxlLmNvbTp1c2VyUGFzczEyMw==
+
+### VERIFICATION DES TRANSACTIONS RECUES
+GET http://localhost:8080/transactions/received
+Authorization: Basic YWRtaW5AZXhhbXBsZS5jb206YWRtaW5QYXNzMTIz
+
