@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/deposits")
+@RequestMapping("/api/deposits") // Modifié pour éviter le conflit
 @RequiredArgsConstructor
 public class DepositRestController {
 
@@ -42,6 +42,5 @@ public class DepositRestController {
         return user.map(value -> ResponseEntity.ok(depositService.getUserDeposits(value)))
                 .orElseGet(() -> ResponseEntity.status(HttpStatus.UNAUTHORIZED).build());
     }
-
-
 }
+

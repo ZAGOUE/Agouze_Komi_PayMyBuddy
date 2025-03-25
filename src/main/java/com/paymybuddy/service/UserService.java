@@ -6,12 +6,13 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import com.paymybuddy.entity.User;
 import com.paymybuddy.repository.UserRepository;
+
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -21,11 +22,17 @@ public class UserService implements UserDetailsService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 
+    public List<User> getFriends(String userEmail) {
+        User user = userRepository.findByEmail(userEmail)
+                .orElseThrow(() -> new UsernameNotFoundException("Utilisateur introuvable"));
+        System.out.println("Amis trouvés pour " + userEmail + " : " + user.getFriends());
+               return user.getFriends();
+    }
+
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new UsernameNotFoundException("Utilisateur introuvable : " + email));
-
 
         return org.springframework.security.core.userdetails.User
                 .withUsername(user.getEmail())
@@ -59,6 +66,21 @@ public class UserService implements UserDetailsService {
     public Optional<User> findByEmail(String email) {
         return userRepository.findByEmail(email);
     }
+    public User findById(Integer userId) {
+        return userRepository.findById(userId)
+                .orElseThrow(() -> new UsernameNotFoundException("Utilisateur introuvable par ID"));
+    }
+
+
+    public User findByEmailWithFriends(String email) {
+        return userRepository.findByEmailWithFriends(email)
+                .orElseThrow(() -> new UsernameNotFoundException("Utilisateur introuvable"));
+    }
+    public List<User> getUsersNotAlreadyFriends(String email) {
+        return userRepository.findUsersNotAlreadyFriends(email);
+    }
+
+
 
     public boolean existsByEmail(String email) {
         return userRepository.existsByEmail(email);
@@ -72,13 +94,27 @@ public class UserService implements UserDetailsService {
         user.setRole(Role.ROLE_ADMIN);
         return userRepository.save(user);
     }
-    public static class PasswordGenerator {
-        public static void main(String[] args) {
-            PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-            String rawPassword = "adminPass123";  // Le mot de passe à hasher
-            String encodedPassword = passwordEncoder.encode(rawPassword);
-
-
+    @Transactional
+    public void registerUser(String firstName, String lastName, String email, String password) {
+        if (userRepository.findByEmail(email).isPresent()) {
+            throw new IllegalArgumentException("Cet email est déjà utilisé.");
         }
+
+        User user = new User();
+        user.setFirstName(firstName);
+        user.setLastName(lastName);
+        user.setEmail(email);
+        user.setPassword(passwordEncoder.encode(password));
+        user.setRole(Role.ROLE_USER);
+        user.setBalance(BigDecimal.valueOf(0)); // Solde initial à 0
+
+        userRepository.save(user);
     }
+    @Transactional
+    public User updateUser(User user) {
+        return userRepository.save(user);
+    }
+
+
+
 }

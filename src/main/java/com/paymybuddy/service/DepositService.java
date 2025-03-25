@@ -32,6 +32,7 @@ public class DepositService {
     }
 
     public void deposit(User u, BigDecimal amount) {
+        this.makeDeposit(u, amount);
 
     }
 }

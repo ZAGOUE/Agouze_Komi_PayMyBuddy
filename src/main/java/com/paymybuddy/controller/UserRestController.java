@@ -70,7 +70,7 @@ public class UserRestController {
 
     @PutMapping("/promote/{email}")
     public ResponseEntity<Map<String, String>> promoteToAdmin(@PathVariable String email) {
-      //  User user = userService.promoteToAdmin(email);
+        User user = userService.promoteToAdmin(email);
         return ResponseEntity.ok(Map.of("message", "L'utilisateur " + email + " est maintenant ADMIN"));
     }
 }

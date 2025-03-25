@@ -9,26 +9,32 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import java.util.Optional;
-
 @Controller
 @RequestMapping("/dashboard")
 public class DashboardController {
+
     private final UserService userService;
 
-    public DashboardController(UserService userService) {
+    public DashboardController(UserService userService)
+    {
         this.userService = userService;
     }
 
-    @GetMapping
-    public String dashboard(Model model, Authentication authentication) {
-        Optional<User> user = userService.findByEmail(authentication.getName());
 
-        if (user.isEmpty()) {
+    @GetMapping
+    public String showDashboard(Model model, Authentication authentication) {
+        if (authentication == null || authentication.getName() == null) {
             return "redirect:/login";
         }
 
-        model.addAttribute("user", user.get());
+        String userEmail = authentication.getName();
+        User user = userService.findByEmail(userEmail)
+                .orElseThrow(() -> new IllegalArgumentException("Utilisateur non trouvé"));
+
+        model.addAttribute("user", user); // seulement l'utilisateur nécessaire
         return "dashboard";
     }
+
+
+
 }
