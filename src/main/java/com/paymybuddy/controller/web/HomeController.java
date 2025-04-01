@@ -1,4 +1,4 @@
-package com.paymybuddy.controller;
+package com.paymybuddy.controller.web;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;

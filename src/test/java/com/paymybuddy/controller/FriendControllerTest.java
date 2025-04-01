@@ -1,5 +1,6 @@
 package com.paymybuddy.controller;
 
+import com.paymybuddy.controller.api.FriendController;
 import com.paymybuddy.entity.User;
 import com.paymybuddy.service.UserService;
 import org.junit.jupiter.api.BeforeEach;

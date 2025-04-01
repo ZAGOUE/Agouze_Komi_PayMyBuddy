@@ -1,6 +1,5 @@
-package com.paymybuddy.controller;
+package com.paymybuddy.controller.api;
 
-import com.paymybuddy.entity.Role;
 import com.paymybuddy.entity.User;
 import com.paymybuddy.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -14,10 +13,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 
 @Controller
 @RequestMapping("/friends")

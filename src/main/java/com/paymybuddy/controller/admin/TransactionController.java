@@ -1,4 +1,4 @@
-package com.paymybuddy.controller;
+package com.paymybuddy.controller.admin;
 
 import com.paymybuddy.entity.User;
 import com.paymybuddy.service.TransactionService;
@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.math.BigDecimal;
-import java.util.List;
 import java.util.Optional;
 
 @Controller

@@ -1,5 +1,6 @@
 package com.paymybuddy.controller;
 
+import com.paymybuddy.controller.api.UserRestController;
 import com.paymybuddy.entity.Role;
 import com.paymybuddy.entity.User;
 import com.paymybuddy.service.UserService;

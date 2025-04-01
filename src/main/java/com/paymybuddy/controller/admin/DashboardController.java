@@ -1,4 +1,4 @@
-package com.paymybuddy.controller;
+package com.paymybuddy.controller.admin;
 
 
 import com.paymybuddy.entity.User;
