@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Ajouter un ami - Pay My Buddy</title>
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+    <script th:src="@{/js/bootstrap.bundle.min.js}" defer></script>
+</head>
+<body>
+
+<!-- Menu standard -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container">
+        <a class="navbar-brand" href="/dashboard">Pay My Buddy</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse justify-content-between" id="navbarNav">
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link" href="/dashboard">Tableau de bord</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/transactions/sent">Transactions envoyées</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/transactions/received">Transactions reçues</a>
+                </li>
+            </ul>
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <span class="nav-link text-white">
+                        Connecté en tant que <strong th:text="${user.firstName + ' ' + user.lastName}">Nom</strong>
+                    </span>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/logout">Déconnexion</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+
+<div class="container mt-4">
+    <h2>Ajouter un ami existant</h2>
+
+    <!-- ✅ Formulaire simple d'ajout par email uniquement -->
+    <form th:action="@{/friends/add-new}" method="post" class="mb-4">
+        <div class="row">
+            <div class="col-md-8">
+                <input type="email" class="form-control" name="email" placeholder="Email de l'ami à ajouter" required>
+            </div>
+            <div class="col-md-4">
+                <button type="submit" class="btn btn-primary">Ajouter un ami</button>
+            </div>
+        </div>
+    </form>
+
+    <!-- ✅ Affichage des messages -->
+    <div th:if="${success}" class="alert alert-success" th:text="${success}"></div>
+    <div th:if="${error}" class="alert alert-danger" th:text="${error}"></div>
+
+    <!-- Liste des utilisateurs non amis -->
+    <h3 class="mt-5">Utilisateurs que vous pouvez ajouter</h3>
+    <form th:action="@{/friends/add}" method="post">
+        <table class="table table-striped">
+            <thead>
+            <tr>
+                <th>Prénom</th>
+                <th>Nom</th>
+                <th>Email</th>
+                <th>Ajouter</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="potentialFriend : ${potentialFriends}">
+                <td th:text="${potentialFriend.firstName}">John</td>
+                <td th:text="${potentialFriend.lastName}">Doe</td>
+                <td th:text="${potentialFriend.email}">john.doe@example.com</td>
+                <td>
+                    <button type="submit" name="friendId" th:value="${potentialFriend.userId}" class="btn btn-primary btn-sm">
+                        Ajouter
+                    </button>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </form>
+</div>
+
+</body>
+</html>

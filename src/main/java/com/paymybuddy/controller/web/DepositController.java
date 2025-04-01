@@ -1,5 +1,6 @@
-package com.paymybuddy.controller;
+package com.paymybuddy.controller.web;
 
+import com.paymybuddy.entity.Deposit;
 import com.paymybuddy.entity.User;
 import com.paymybuddy.service.DepositService;
 import com.paymybuddy.service.UserService;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.Optional;
 
 @Controller
@@ -46,6 +48,18 @@ public class DepositController {
         Optional<User> user = userService.findByEmail(authentication.getName());
         user.ifPresent(u -> depositService.deposit(u, amount));
 
-        return "redirect:/users/dashboard"; // Redirige vers le dashboard après dépôt
+        return "redirect:/dashboard"; // Redirige vers le dashboard après dépôt
 }
+
+    @GetMapping("/history")
+    public String showDepositHistory(Model model, Authentication auth) {
+        Optional<User> user = userService.findByEmail(auth.getName());
+        if(user.isPresent()) {
+            List<Deposit> deposits = depositService.getUserDeposits(user.get());
+            model.addAttribute("deposits", deposits);
+            return "deposit-history";
+        }
+        return "redirect:/login";
+    }
+
 }

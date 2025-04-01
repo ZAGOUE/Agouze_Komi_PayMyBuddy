@@ -1,8 +1,8 @@
-package com.paymybuddy.controller;
+package com.paymybuddy.controller.api;
 
-import com.paymybuddy.entity.Deposit;
+import com.paymybuddy.entity.Connection;
 import com.paymybuddy.entity.User;
-import com.paymybuddy.service.DepositService;
+import com.paymybuddy.service.ConnectionService;
 import com.paymybuddy.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -10,38 +10,36 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
-import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/deposits")
+@RequestMapping("/connections")
 @RequiredArgsConstructor
-public class DepositRestController {
+public class ConnectionController {
 
-    private final DepositService depositService;
+    private final ConnectionService connectionService;
     private final UserService userService;
 
     @PostMapping("/add")
-    public ResponseEntity<Deposit> makeDeposit(
+    public ResponseEntity<Connection> addConnection(
             Authentication authentication,
-            @RequestParam BigDecimal amount) {
+            @RequestParam String friendEmail) {
 
         Optional<User> user = userService.findByEmail(authentication.getName());
-        if (user.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        Optional<User> friend = userService.findByEmail(friendEmail);
+
+        if (user.isEmpty() || friend.isEmpty()) {
+            return ResponseEntity.badRequest().build();
         }
 
-        Deposit deposit = depositService.makeDeposit(user.get(), amount);
-        return ResponseEntity.ok(deposit);
+        return ResponseEntity.ok(connectionService.addConnection(user.get(), friend.get()));
     }
 
     @GetMapping("/{email}")
-    public ResponseEntity<List<Deposit>> getUserDeposits(Authentication authentication) {
+    public ResponseEntity<List<Connection>> getUserConnections(Authentication authentication) {
         Optional<User> user = userService.findByEmail(authentication.getName());
-        return user.map(value -> ResponseEntity.ok(depositService.getUserDeposits(value)))
+        return user.map(value -> ResponseEntity.ok(connectionService.getUserConnections(value)))
                 .orElseGet(() -> ResponseEntity.status(HttpStatus.UNAUTHORIZED).build());
     }
-
-
 }
