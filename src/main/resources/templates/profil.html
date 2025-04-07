@@ -1,0 +1,35 @@
+
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Mon profil</title>
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+</head>
+<body>
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card shadow border-0">
+                <div class="card-header bg-primary text-white text-center">
+                    <h3>Mon profil</h3>
+                </div>
+                <div class="card-body">
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item"><strong>Prénom :</strong> <span th:text="${user.firstName}">Alex</span></li>
+                        <li class="list-group-item"><strong>Nom :</strong> <span th:text="${user.lastName}">DOUDOU</span></li>
+                        <li class="list-group-item"><strong>Email :</strong> <span th:text="${user.email}">alex@example.com</span></li>
+                        <li class="list-group-item"><strong>Rôle :</strong> <span th:text="${user.role}">ROLE_USER</span></li>
+                        <li class="list-group-item"><strong>Solde actuel :</strong> <span th:text="${user.balance} + ' €'">0.00 €</span></li>
+                    </ul>
+                </div>
+                <div class="card-footer d-flex justify-content-between">
+                    <a href="/dashboard" class="btn btn-outline-secondary">Retour</a>
+                    <a href="/users/change-password" class="btn btn-warning">Modifier le mot de passe</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

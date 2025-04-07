@@ -55,6 +55,10 @@ public class TransactionService implements ITransactionService {
         if (sender.getBalance().compareTo(amount) < 0) {
             throw new IllegalArgumentException("Solde insuffisant pour effectuer ce transfert.");
         }
+        if (amount.compareTo(BigDecimal.ZERO) < 0) {
+            throw new IllegalArgumentException("Montant ,négatif pour effectuer ce transfert.");
+        }
+
 
         BigDecimal fee = amount.multiply(new BigDecimal("0.005")).setScale(5, RoundingMode.HALF_UP);
         BigDecimal totalDebit = amount.add(fee);

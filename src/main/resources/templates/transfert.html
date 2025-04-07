@@ -9,6 +9,7 @@
     <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
     <!-- CSS Select2 (CDN) -->
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet"/>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
 
     <!-- JavaScript (Bootstrap + jQuery + Select2 CDN) -->
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
@@ -26,7 +27,7 @@
     </script>
 </head>
 <body>
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary">
     <div class="container">
         <a class="navbar-brand" href="/dashboard">Pay My Buddy</a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
@@ -63,36 +64,56 @@
 <div class="container mt-4">
     <h2>Transférer de l'argent</h2>
 
+    <div th:if="${error}" class="alert alert-danger">
+        <p th:text="${error}"></p>
+    </div>
+
     <h3>Effectuer un transfert</h3>
+
     <form th:action="@{/transactions/sent}" method="post">
-        <!-- Liste déroulante Destinataire à ajouter -->
-        <div class="mb-3">
-            <label for="receiverEmail" class="form-label">Choisir un destinataire :</label>
-            <select class="form-select" id="receiverEmail" name="receiverEmail" required>
-                <option value="" disabled selected>-- Sélectionnez un ami --</option>
-                <option th:each="friend : ${friends}"
-                        th:value="${friend.email}"
-                        th:text="${friend.firstName + ' ' + friend.lastName + ' (' + friend.email + ')'}">
-                    Ami Exemple
-                </option>
-            </select>
+
+        <div th:if="${error}" class="alert alert-danger">
+
         </div>
 
-        <!-- Montant -->
-        <div class="mb-3">
-            <label for="amount" class="form-label">Montant :</label>
-            <input type="number" step="0.01" class="form-control" id="amount" name="amount" required>
+
+        <!-- Si l'utilisateur n'a pas d'amis -->
+        <div th:if="${#lists.isEmpty(friends)}" class="alert alert-warning">
+            Vous n'avez pas encore ajouté d'amis pour effectuer un transfert.
         </div>
 
-        <!-- Description -->
-        <div class="mb-3">
-            <label for="description" class="form-label">Description :</label>
-            <input type="text" class="form-control" id="description" name="description">
-        </div>
+        <!-- Affichage du formulaire uniquement si amis présents -->
+        <div th:unless="${#lists.isEmpty(friends)}">
 
-        <button type="submit" class="btn btn-success">Envoyer</button>
+            <!-- Liste déroulante Destinataire -->
+            <div class="mb-3">
+                <label for="receiverEmail" class="form-label">Choisir un destinataire :</label>
+                <select class="form-select" id="receiverEmail" name="receiverEmail" required>
+                    <option value="" disabled selected>-- Sélectionnez un ami --</option>
+                    <option th:each="friend : ${friends}"
+                            th:value="${friend.email}"
+                            th:text="${friend.firstName + ' ' + friend.lastName + ' (' + friend.email + ')'}">
+                    </option>
+                </select>
+            </div>
+
+            <!-- Montant -->
+            <div class="mb-3">
+                <label for="amount" class="form-label">Montant :</label>
+                <input type="number" step="0.01" class="form-control" id="amount" name="amount" required>
+            </div>
+
+            <!-- Description -->
+            <div class="mb-3">
+                <label for="description" class="form-label">Description :</label>
+                <input type="text" class="form-control" id="description" name="description">
+            </div>
+
+            <button type="submit" class="btn btn-success">Envoyer</button>
+
+        </div>
     </form>
-
 </div>
+
 </body>
 </html>

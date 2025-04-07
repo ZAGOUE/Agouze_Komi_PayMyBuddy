@@ -1,5 +1,6 @@
 package com.paymybuddy.controller.api;
 
+import com.paymybuddy.entity.Role;
 import com.paymybuddy.entity.User;
 import com.paymybuddy.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -15,6 +16,10 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
+
+import static java.util.Arrays.stream;
+import static java.util.Locale.filter;
 
 @Controller
 @RequestMapping("/friends")
@@ -29,7 +34,12 @@ public class FriendController {
         String email = auth.getName();
 
         User currentUser = userService.findByEmailWithFriends(email);
-        List<User> potentialFriends = userService.getUsersNotAlreadyFriends(email);
+        List<User> potentialFriends = userService.getUsersNotAlreadyFriends(email)
+
+         .stream()
+                .filter(user -> user.getRole() == Role.ROLE_USER)
+                .collect(Collectors.toList());
+
 
         model.addAttribute("potentialFriends", potentialFriends);
         model.addAttribute("user", currentUser);
