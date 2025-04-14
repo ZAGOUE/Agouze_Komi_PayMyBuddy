@@ -5,6 +5,8 @@ import com.paymybuddy.entity.User;
 import com.paymybuddy.repository.TransactionRepository;
 import com.paymybuddy.repository.UserRepository;
 import jakarta.transaction.Transactional;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -14,6 +16,8 @@ import java.util.List;
 
 @Service
 public class TransactionService implements ITransactionService {
+    private static final Logger logger = LoggerFactory.getLogger(TransactionService.class);
+
 
     private final TransactionRepository transactionRepository;
     private final UserRepository userRepository;
@@ -25,11 +29,14 @@ public class TransactionService implements ITransactionService {
 
     @Override
     public List<Transaction> getSentTransactions(User sender) {
+
+        logger.debug("Transactions envoyées par : {}", sender.getEmail());
         return transactionRepository.findBySender(sender);
     }
 
     @Override
     public List<Transaction> getReceivedTransactions(User receiver) {
+        logger.debug("Transactions reçues pour : {}", receiver.getEmail());
         return transactionRepository.findByReceiver(receiver);
     }
 
@@ -79,8 +86,7 @@ public class TransactionService implements ITransactionService {
 
         transactionRepository.save(transaction);
 
-        System.out.println("\uD83D\uDCB8 Transaction enregistrée : " + sender.getEmail() + " -> " + receiver.getEmail()
-                + " | Montant : " + amount + " | Frais : " + fee + " | Total débité : " + totalDebit);
+        logger.info("✅ Transaction enregistrée : {} → {} | Montant : {} | Frais : {}", senderEmail, receiverEmail, amount, fee);
 
         return transaction;
     }

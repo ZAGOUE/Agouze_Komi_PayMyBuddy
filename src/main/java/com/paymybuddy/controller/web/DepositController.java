@@ -30,25 +30,25 @@ public class DepositController {
     @GetMapping("/add")
     public String showDepositPage(Model model, Authentication authentication) {
         if (authentication == null) {
-            return "redirect:/login"; // Redirige vers le login
+            return "redirect:/login";
         }
 
         Optional<User> user = userService.findByEmail(authentication.getName());
         user.ifPresent(value -> model.addAttribute("user", value));
 
-        return "deposit"; // Affiche deposit.html
+        return "deposit";
     }
 
     @PostMapping("/add")
     public String processDeposit(@RequestParam BigDecimal amount, Authentication authentication) {
         if (authentication == null) {
-            return "redirect:/login"; // Redirige vers le login
+            return "redirect:/login";
         }
 
         Optional<User> user = userService.findByEmail(authentication.getName());
         user.ifPresent(u -> depositService.deposit(u, amount));
 
-        return "redirect:/dashboard"; // Redirige vers le dashboard après dépôt
+        return "redirect:/dashboard";
 }
 
     @GetMapping("/history")

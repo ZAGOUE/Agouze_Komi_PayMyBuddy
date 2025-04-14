@@ -9,6 +9,7 @@ import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -33,16 +34,23 @@ public class TransactionServiceTest {
         sender.setEmail("sender@example.com");
         sender.setBalance(new BigDecimal("100.00"));
 
+
         User receiver = new User();
         receiver.setUserId(2);
         receiver.setEmail("receiver@example.com");
         receiver.setBalance(new BigDecimal("50.00"));
 
-        BigDecimal amount = new BigDecimal("10.00");
-        String description = "Test paiement";
+        // Mock : simule la base de données
+        when(userRepository.findByEmail("sender@example.com")).thenReturn(Optional.of(sender));
+        when(userRepository.findByEmail("receiver@example.com")).thenReturn(Optional.of(receiver));
+
+
 
         when(transactionRepository.save(any(Transaction.class)))
                 .thenAnswer(invocation -> invocation.getArgument(0));
+
+        BigDecimal amount = new BigDecimal("10.00");
+        String description = "Test paiement";
 
         Transaction transaction = transactionService.transferMoney(sender, receiver, amount, description);
 

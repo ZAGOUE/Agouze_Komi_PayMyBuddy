@@ -2,6 +2,8 @@ package com.paymybuddy.controller.admin;
 
 import com.paymybuddy.entity.User;
 import com.paymybuddy.service.UserService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
@@ -16,6 +18,8 @@ import java.util.Optional;
 @Controller
 @RequestMapping("/users")
 public class UserController {
+
+    private static final Logger logger = LoggerFactory.getLogger(UserController.class);
 
     private final UserService userService;
     private final PasswordEncoder passwordEncoder;
@@ -50,6 +54,7 @@ public class UserController {
         Optional<User> userOpt = userService.findByEmail(authentication.getName());
 
         if (userOpt.isEmpty()) {
+            logger.error("Utilisateur non trouvé lors du changement de mot de passe.");
             model.addAttribute("error", "Utilisateur introuvable.");
             return "change-password";
         }
@@ -57,6 +62,7 @@ public class UserController {
         User user = userOpt.get();
 
         if (!passwordEncoder.matches(currentPassword, user.getPassword())) {
+            logger.warn("Mot de passe actuel incorrect");
             model.addAttribute("error", "Mot de passe actuel incorrect.");
             return "change-password";
         }
@@ -68,6 +74,7 @@ public class UserController {
 
         user.setPassword(passwordEncoder.encode(newPassword));
         userService.updateUser(user);
+        logger.info("Mot de passe modifié avec succès pour");
 
         model.addAttribute("success", "Mot de passe modifié avec succès.");
         return "change-password";

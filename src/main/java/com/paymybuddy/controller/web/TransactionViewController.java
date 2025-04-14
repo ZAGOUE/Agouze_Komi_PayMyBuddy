@@ -34,9 +34,9 @@ public class TransactionViewController {
             return "redirect:/login";
         }
 
-        List<Transaction> transactions = transactionService.findAll(); // ✅ Toutes les transactions
+        List<Transaction> transactions = transactionService.findAll(); // Toutes les transactions
         model.addAttribute("transactions", transactions);
         model.addAttribute("user", admin.get());
-        return "admin-transactions"; // ✅ Vue dédiée admin
+        return "admin-transactions"; // pour admin
     }
 }

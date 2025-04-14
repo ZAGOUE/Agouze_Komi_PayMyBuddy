@@ -3,6 +3,8 @@ package com.paymybuddy.service;
 import com.paymybuddy.entity.Role;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -19,6 +21,7 @@ import java.util.Optional;
 @Service
 @RequiredArgsConstructor
 public class UserService implements UserDetailsService {
+    private static final Logger logger = LoggerFactory.getLogger(UserService.class);
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
@@ -60,6 +63,7 @@ public class UserService implements UserDetailsService {
 
     @Transactional
     public void updateBalance(User user, BigDecimal newBalance) {
+        logger.debug("Mise à jour du solde pour {} : {} €", user.getEmail(), newBalance);
         user.setBalance(newBalance);
         userRepository.save(user);
     }
@@ -98,6 +102,7 @@ public class UserService implements UserDetailsService {
     @Transactional
     public void registerUser(String firstName, String lastName, String email, String password) {
         if (userRepository.findByEmail(email).isPresent()) {
+            logger.warn("Tentative d'enregistrement avec un email existant : {}", email);
             throw new IllegalArgumentException("Cet email est déjà utilisé.");
         }
 
@@ -110,6 +115,7 @@ public class UserService implements UserDetailsService {
         user.setBalance(BigDecimal.valueOf(0)); // Solde initial à 0
 
         userRepository.save(user);
+        logger.info("Utilisateur enregistré : {}", email);
     }
     @Transactional
     public User updateUser(User user) {

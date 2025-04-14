@@ -15,7 +15,6 @@ import org.slf4j.LoggerFactory;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 
 @Controller
@@ -48,13 +47,14 @@ public class TransactionController {
     @GetMapping("/received")
     public String showReceivedTransactions(Model model, Authentication authentication) {
         if (authentication == null || authentication.getName() == null) {
+            logger.warn("Utilisateur non trouvé .");
             return "redirect:/login";
         }
         Optional<User> user = userService.findByEmail(authentication.getName());
         user.ifPresent(value -> {
-            model.addAttribute("transactions", transactionService.getReceivedTransactions(value)); // ✅ corrigé ici
-            model.addAttribute("type", "reçues"); // ✅ corrigé ici
-            model.addAttribute("user", value);   // ✅ ajouté pour la navbar
+            model.addAttribute("transactions", transactionService.getReceivedTransactions(value));
+            model.addAttribute("type", "reçues");
+            model.addAttribute("user", value);
         });
         return "transactions";
     }
@@ -78,23 +78,25 @@ public class TransactionController {
         Optional<User> receiverOpt = userService.findByEmail(receiverEmail);
 
         if (senderOpt.isEmpty() || receiverOpt.isEmpty() ) {
+            logger.error("Erreur de saisie pour un transfert : montant négatif ou utilisateur manquant.");
 
             model.addAttribute("error", "Erreur lors du transfert.");
-            return "dashboard"; // ou la vue appropriée
+            return "dashboard";
         }
 
         try {
             transactionService.transferMoney(senderOpt.get().getEmail(), receiverOpt.get().getEmail(), amount, description);
             return "redirect:/dashboard?success";
         } catch (IllegalArgumentException e) {
+            logger.error("Erreur lors du transfert : {}", e.getMessage());
 
-            User userObj = userService.findByEmailWithFriends(authentication.getName()); // Utiliser la méthode qui charge les amis
+            User userObj = userService.findByEmailWithFriends(authentication.getName());
 
-            // On s'assure que la liste d'amis n'est jamais null
+            // je m'assure que la liste d'amis n'est jamais null
             model.addAttribute("user", userObj);
             model.addAttribute("friends", userObj.getFriends() == null ? new ArrayList<>() : userObj.getFriends());
             model.addAttribute("error", e.getMessage());
-            return "transfert"; // la vue du formulaire de transfert
+            return "transfert";
         }
 
     }
