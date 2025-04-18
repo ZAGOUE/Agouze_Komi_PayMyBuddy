@@ -37,6 +37,6 @@ public class TransactionViewController {
         List<Transaction> transactions = transactionService.findAll(); // Toutes les transactions
         model.addAttribute("transactions", transactions);
         model.addAttribute("user", admin.get());
-        return "admin-transactions"; // pour admin
+        return "admin-transactions";
     }
 }

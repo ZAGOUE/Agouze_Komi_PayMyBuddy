@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -73,7 +74,8 @@ public class TransactionController {
                                 @RequestParam BigDecimal amount,
                                 @RequestParam(required = false) String description,
                                 Authentication authentication,
-                                Model model) {
+                                Model model,
+                                RedirectAttributes redirectAttributes) {
         Optional<User> senderOpt = userService.findByEmail(authentication.getName());
         Optional<User> receiverOpt = userService.findByEmail(receiverEmail);
 
@@ -86,6 +88,7 @@ public class TransactionController {
 
         try {
             transactionService.transferMoney(senderOpt.get().getEmail(), receiverOpt.get().getEmail(), amount, description);
+            redirectAttributes.addFlashAttribute("success", "✔️ Transfert effectué avec succès !");
             return "redirect:/dashboard?success";
         } catch (IllegalArgumentException e) {
             logger.error("Erreur lors du transfert : {}", e.getMessage());

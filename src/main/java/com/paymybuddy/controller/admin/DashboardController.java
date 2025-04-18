@@ -40,7 +40,7 @@ public class DashboardController {
 
         logger.info("Dashboard affiché pour l'utilisateur : {}", userEmail);
 
-        model.addAttribute("user", user); // seulement l'utilisateur nécessaire
+        model.addAttribute("user", user);
         return "dashboard";
     }
 

@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/api/deposits") // Modifié pour éviter le conflit
+@RequestMapping("/api/deposits")
 @RequiredArgsConstructor
 public class DepositRestController {
 

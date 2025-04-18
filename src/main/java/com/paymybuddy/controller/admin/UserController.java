@@ -38,7 +38,7 @@ public class UserController {
         Optional<User> user = userService.findByEmail(authentication.getName());
         user.ifPresent(value -> model.addAttribute("user", value));
 
-        return "dashboard"; // Affiche dashboard.html
+        return "dashboard";
     }
     @GetMapping("/change-password")
     public String showChangePasswordForm() {

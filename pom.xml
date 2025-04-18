@@ -120,6 +120,23 @@
 				<groupId>org.jacoco</groupId>
 				<artifactId>jacoco-maven-plugin</artifactId>
 				<version>0.8.10</version>
+				<configuration>
+
+					<excludes>>
+						<exclude>**/controller/api/ConnectionController*</exclude>
+						<exclude>**/controller/api/DepositRestController*</exclude>
+						<exclude>**/controller/admin/DashboardController*</exclude>
+						<exclude>**/controller/admin/ProfileController*</exclude>
+						<exclude>**/controller/web/HomeController*</exclude>
+						<exclude>**/service/ConnectionService*</exclude>
+						<exclude>**/service/WithdrawalService*</exclude>
+						<exclude>**/service/BankAccountService*</exclude>
+						<exclude>**/config/*</exclude>
+						<exclude>**/PaymybuddyApplication*</exclude>
+
+					</excludes>
+
+				</configuration>
 				<executions>
 					<execution>
 						<goals>

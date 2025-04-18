@@ -41,7 +41,7 @@ public class UserService implements UserDetailsService {
         return org.springframework.security.core.userdetails.User
                 .withUsername(user.getEmail())
                 .password(user.getPassword())
-                .authorities(new SimpleGrantedAuthority(user.getRole().name())) // ✅ Le bon format
+                .authorities(new SimpleGrantedAuthority(user.getRole().name()))
                 .build();
     }
 
@@ -54,7 +54,7 @@ public class UserService implements UserDetailsService {
             throw new IllegalArgumentException("Le mot de passe est obligatoire !");
         }
 
-        user.setPassword(passwordEncoder.encode(user.getPassword())); // Hash du mot de passe
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
         if (user.getRole() == null) {
             user.setRole(Role.ROLE_USER);
         }

@@ -1,3 +1,4 @@
+
 package com.paymybuddy.controller;
 
 import com.paymybuddy.controller.api.UserRestController;
@@ -8,64 +9,94 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
-import org.springframework.http.ResponseEntity;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 
-import java.util.Map;
+import java.math.BigDecimal;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
+import static org.mockito.MockitoAnnotations.openMocks;
 
-class UserRestControllerTest {
+public class UserRestControllerTest {
 
     @Mock
     private UserService userService;
 
+    @Mock
+    private Authentication authentication;
+
     @InjectMocks
     private UserRestController userRestController;
 
+    private User user;
+
     @BeforeEach
     void setUp() {
-        MockitoAnnotations.openMocks(this);
+        openMocks(this);
+        user = new User();
+        user.setEmail("user@example.com");
+        user.setPassword("password");
+        user.setFirstName("John");
+        user.setLastName("Doe");
+        user.setBalance(BigDecimal.TEN);
+        user.setRole(Role.ROLE_USER);
     }
 
     @Test
-    void testPromoteToAdmin_Success() {
-        // Arrange
-        User user = new User();
-        user.setEmail("test@example.com");
-        user.setRole(Role.ROLE_ADMIN);
+    void registerUser_shouldReturnConflict_whenEmailExists() {
+        when(userService.existsByEmail(user.getEmail())).thenReturn(true);
 
-        when(userService.promoteToAdmin("test@example.com")).thenReturn(user);
-
-        // Act
-        ResponseEntity<?> response = userRestController.promoteToAdmin("test@example.com");
-
-        // Assert
-        assertEquals(HttpStatus.OK, response.getStatusCode()); // ✅ Vérifie le statut HTTP
-
-        // ✅ Récupère le message retourné sous forme de `Map`
-        Map<String, String> responseBody = (Map<String, String>) response.getBody();
-        assertNotNull(responseBody);
-
-        // ✅ Vérifie que le message correspond
-        assertEquals("L'utilisateur test@example.com est maintenant ADMIN", responseBody.get("message"));
+        ResponseEntity<?> response = userRestController.registerUser(user);
+        assertEquals(HttpStatus.CONFLICT, response.getStatusCode());
     }
-
 
     @Test
-    void testPromoteToAdmin_UserNotFound() {
-        // Arrange
-        when(userService.promoteToAdmin("nonexistent@example.com"))
-                .thenThrow(new IllegalArgumentException("Utilisateur introuvable"));
+    void getUserByEmail_shouldReturnUser_whenFound() {
+        when(userService.findByEmail("user@example.com")).thenReturn(Optional.of(user));
 
-        // Act & Assert
-        IllegalArgumentException exception = assertThrows(
-                IllegalArgumentException.class,
-                () -> userRestController.promoteToAdmin("nonexistent@example.com") // ✅ Utilisation d'une expression lambda simplifiée
-        );
-
-        assertEquals("Utilisateur introuvable", exception.getMessage());
+        ResponseEntity<User> response = userRestController.getUserByEmail("user@example.com");
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals("user@example.com", response.getBody().getEmail());
     }
+
+    @Test
+    void getUserDetails_shouldReturnUnauthorized_whenNoAuthentication() {
+        ResponseEntity<?> response = userRestController.getUserDetails(null);
+        assertEquals(HttpStatus.UNAUTHORIZED, response.getStatusCode());
+    }
+    @Test
+    void registerUser_shouldReturnCreated_whenValid() {
+        when(userService.existsByEmail(user.getEmail())).thenReturn(false);
+        when(userService.saveUser(user)).thenReturn(user);
+
+        ResponseEntity<?> response = userRestController.registerUser(user);
+        assertEquals(HttpStatus.CREATED, response.getStatusCode());
+        assertEquals(user, response.getBody());
+    }
+    @Test
+    void promoteToAdmin_shouldReturnSuccessMessage() {
+        when(userService.promoteToAdmin(user.getEmail())).thenReturn(user);
+
+        ResponseEntity<?> response = userRestController.promoteToAdmin(user.getEmail());
+
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertTrue(response.getBody().toString().contains("est maintenant ADMIN"));
+    }
+
+    @Test
+    void getUserDetails_shouldReturnUserDetails_whenAuthenticated() {
+        when(authentication.getName()).thenReturn(user.getEmail());
+        when(userService.findByEmail(user.getEmail())).thenReturn(Optional.of(user));
+
+        ResponseEntity<?> response = userRestController.getUserDetails(authentication);
+
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertTrue(((java.util.Map<?, ?>) response.getBody()).containsKey("email"));
+    }
+
+
+
 }

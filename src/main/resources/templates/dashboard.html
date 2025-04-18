@@ -20,6 +20,10 @@
     <!-- Message pour ADMIN -->
     <h2 sec:authorize="hasRole('ROLE_ADMIN')">Bienvenue, Admin sur votre tableau de bord</h2>
 
+    <!-- Message de succès si redirection -->
+    <div th:if="${success}" class="alert alert-success" th:text="${success}"></div>
+
+
     <!-- Message et actions pour USER -->
     <div sec:authorize="hasRole('ROLE_USER')">
         <h2>Bienvenue, <span th:text="${user.firstName}">Utilisateur</span> sur ton tableau de bord</h2>
