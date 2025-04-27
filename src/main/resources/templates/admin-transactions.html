@@ -19,16 +19,17 @@
             <th>Expéditeur</th>
             <th>Destinataire</th>
             <th>Montant</th>
-            <th>Frais</th>
+           <!-- <th>Frais</th> -->
             <th>Date</th>
         </tr>
         </thead>
         <tbody>
         <tr th:each="t : ${transactions}">
-            <td th:text="${t.sender.firstName + ' ' + t.sender.lastName}">Exp</td>
-            <td th:text="${t.receiver.firstName + ' ' + t.receiver.lastName}">Dest</td>
-            <td th:text="${t.amount}">Montant</td>
-            <td th:text="${t.fee}">Frais</td>
+            <td th:text="${t.sender.firstName}">Exp</td>
+            <td th:text="${t.receiver.firstName}">Dest</td>
+            <td th:text="${#numbers.formatDecimal(t.amount, 0, 0)} + ' €'">Montant</td>
+
+            <!-- <td th:text="${t.fee}">Frais</td> -->
             <td th:text="${#temporals.format(t.transactionDate, 'dd/MM/yyyy HH:mm')}"></td>
 
 

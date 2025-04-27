@@ -32,7 +32,7 @@ public class UserController {
     @GetMapping("/dashboard")
     public String showDashboard(Model model, Authentication authentication) {
         if (authentication == null) {
-            return "redirect:/login"; // Redirige vers le login
+            return "redirect:/login";
         }
 
         Optional<User> user = userService.findByEmail(authentication.getName());

@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Effectuer un transfert - Pay My Buddy</title>
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <script th:src="@{/js/bootstrap.bundle.min.js}" defer></script>
+</head>
+<body>
+
+<!-- Menu standard USER -->
+<nav class="navbar navbar-expand-lg">
+    <div class="container">
+        <a class="navbar-brand" href="/dashboard">Pay My Buddy</a>
+        <div class="collapse navbar-collapse justify-content-between">
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link active" href="/transactions/transfer">Transférer</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/profile">Profil</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/friends/add">Ajouter relation</a>
+                </li>
+            </ul>
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link" href="/logout">Se déconnecter</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<div class="container mt-5">
+    <div class="d-flex flex-column align-items-center">
+
+        <h2 class="mb-4">Effectuer un transfert</h2>
+
+        <!-- Formulaire de transfert -->
+        <form th:action="@{/transactions/send}" method="post" class="w-50">
+            <div class="mb-3">
+                <label for="receiverEmail" class="form-label"></label>
+                <select id="receiverEmail" name="receiverEmail" class="form-select" required>
+                    <option value="" disabled selected>Sélectionner une relation</option>
+                    <option th:each="friend : ${friends}" th:value="${friend.email}" th:text="${friend.firstName}">
+                    </option>
+                </select>
+            </div>
+            <div class="mb-3">
+                <label for="description" class="form-label"></label>
+                <input type="text" id="description" name="description" class="form-control" placeholder="Description">
+            </div>
+            <div class="mb-3">
+                <label for="amount" class="form-label"></label>
+                <input type="number" id="amount" name="amount" class="form-control" step="0.01" required placeholder="0€">
+            </div>
+            <div class="d-grid">
+                <button type="submit" class="btn btn-primary">Payer</button>
+            </div>
+        </form>
+
+        <!-- Message d'erreur ou de succes -->
+        <div class="w-50 mt-3">
+            <div th:if="${success}" class="alert alert-success" th:text="${success}"></div>
+            <div th:if="${error}" class="alert alert-danger" th:text="${error}"></div>
+        </div>
+
+    </div>
+
+    <div class="mt-5">
+        <h2 class="mb-4 text-center">Mes Transactions</h2>
+        <table class="table table-bordered">
+            <thead class="table-light">
+            <tr>
+                <th>Relation</th>
+                <th>Description</th>
+                <th>Montant</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="transaction : ${transactions}">
+                <td th:text="${transaction.receiver.firstName}">Relation</td>
+                <td th:text="${transaction.description}">Description</td>
+                <td th:text="${#numbers.formatDecimal(transaction.amount, 0, 0)} + ' €'">Montant</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+</body>
+</html>

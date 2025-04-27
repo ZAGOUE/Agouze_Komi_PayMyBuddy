@@ -7,16 +7,16 @@
 
     <!-- Lien vers Bootstrap -->
     <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
-    <!-- CSS Select2 (CDN) -->
+    <!-- CSS  -->
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet"/>
     <link rel="stylesheet" th:href="@{/css/style.css}">
 
-    <!-- JavaScript (Bootstrap + jQuery + Select2 CDN) -->
+    <!-- Bootstrap + jQuery  -->
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <script th:src="@{/js/bootstrap.bundle.min.js}" defer></script>
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 
-    <!-- Initialisation Select2 -->
+    <!-- Sélectionner un ami -->
     <script>
         $(document).ready(function() {
             $('#receiverEmail').select2({

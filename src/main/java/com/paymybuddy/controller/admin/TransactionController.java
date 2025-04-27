@@ -118,6 +118,42 @@ public class TransactionController {
         return "transfert";
     }
 
+    // Nouvelles méthodes de transfert
+
+    @GetMapping("/transfer")
+    public String showNewTransferPage(Model model, Authentication auth) {
+        String email = auth.getName();
+
+        User user = userService.findByEmailWithFriends(email);
+
+        logger.debug("Friends list size: {}", user.getFriends() == null ? 0 : user.getFriends().size());
+
+        model.addAttribute("user", user);
+        model.addAttribute("friends", user.getFriends());
+
+
+        model.addAttribute("transactions", transactionService.getSentTransactions(user));
+
+        return "transfert-new";
+    }
+
+    @PostMapping("/send")
+    public String sendMoneyFromNewPage(@RequestParam String receiverEmail,
+                                       @RequestParam BigDecimal amount,
+                                       @RequestParam(required = false) String description,
+                                       Authentication authentication,
+                                       RedirectAttributes redirectAttributes) {
+        try {
+            transactionService.transferMoney(authentication.getName(), receiverEmail, amount, description);
+            redirectAttributes.addFlashAttribute("success", "✔️ Transfert effectué avec succès !");
+        } catch (IllegalArgumentException e) {
+            redirectAttributes.addFlashAttribute("error", e.getMessage());
+        }
+        return "redirect:/transactions/transfer";
+    }
+
+
+
 
 
 }

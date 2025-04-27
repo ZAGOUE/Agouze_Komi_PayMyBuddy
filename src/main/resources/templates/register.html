@@ -1,31 +1,20 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Inscription</title>
+    <title>Inscription - Pay My Buddy</title>
     <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
-<body>
-<div class="container">
-    <h2 class="mt-5">Créer un compte</h2>
+<body class="register-body">
+<div class="container-register">
+    <div class="brand-title">Pay My Buddy</div>
 
     <form action="/register" method="post">
-        <div class="mb-3">
-            <label for="firstName" class="form-label">Prénom</label>
-            <input type="text" class="form-control" id="firstName" name="firstName" required>
-        </div>
-        <div class="mb-3">
-            <label for="lastName" class="form-label">Nom</label>
-            <input type="text" class="form-control" id="lastName" name="lastName" required>
-        </div>
-        <div class="mb-3">
-            <label for="email" class="form-label">Email</label>
-            <input type="email" class="form-control" id="email" name="email" required>
-        </div>
-        <div class="mb-3">
-            <label for="password" class="form-label">Mot de passe</label>
-            <input type="password" class="form-control" id="password" name="password" required>
-        </div>
-        <button type="submit" class="btn btn-success">S'inscrire</button>
+        <input type="text" class="form-control" name="firstName" id="firstName" placeholder="Username" required>
+        <input type="hidden" class="form-control" name="lastName" id="lastName">
+        <input type="email" class="form-control" name="email" placeholder="Mail" required>
+        <input type="password" class="form-control" name="password" placeholder="Mot de passe" required>
+        <button type="submit" class="btn btn-primary">S'inscrire</button>
     </form>
 
     <p class="mt-3">
@@ -36,5 +25,13 @@
     <div th:if="${error}" class="alert alert-danger mt-3" th:text="${error}"></div>
     <div th:if="${success}" class="alert alert-success mt-3" th:text="${success}"></div>
 </div>
+
+
+<script>
+    document.querySelector('form').addEventListener('submit', function() {
+        const firstNameValue = document.getElementById('firstName').value;
+        document.getElementById('lastName').value = firstNameValue;
+    });
+</script>
 </body>
 </html>

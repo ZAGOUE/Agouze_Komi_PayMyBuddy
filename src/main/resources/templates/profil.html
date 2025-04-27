@@ -1,35 +1,68 @@
-
 <!DOCTYPE html>
-<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+<html lang="fr" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <meta charset="UTF-8">
     <title>Mon profil</title>
     <link rel="stylesheet" href="/css/bootstrap.min.css">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <script th:src="@{/js/bootstrap.bundle.min.js}" defer></script>
 </head>
 <body>
+
+<!-- Menu standard USER -->
+<nav class="navbar navbar-expand-lg">
+    <div class="container">
+        <a class="navbar-brand" href="/dashboard">Pay My Buddy</a>
+        <div class="collapse navbar-collapse justify-content-between">
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link" href="/transactions/transfer">Transférer</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link active" href="/profile">Profil</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/friends/add">Ajouter relation</a>
+                </li>
+            </ul>
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link" href="/logout">Se déconnecter</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
 <div class="container mt-5">
     <div class="row justify-content-center">
         <div class="col-md-6">
-            <div class="card shadow border-0">
-                <div class="card-header bg-primary text-white text-center">
-                    <h3>Mon profil</h3>
+            <div class="p-4 bg-white shadow-sm" style="border-radius: 8px;">
+                <div class="mb-4">
+                    <div class="d-flex justify-content-between">
+                        <div><strong>Username</strong></div>
+                        <div>@<span th:text="${user.firstName}">username</span></div>
+                    </div>
                 </div>
-                <div class="card-body">
-                    <ul class="list-group list-group-flush">
-                        <li class="list-group-item"><strong>Prénom :</strong> <span th:text="${user.firstName}">Alex</span></li>
-                        <li class="list-group-item"><strong>Nom :</strong> <span th:text="${user.lastName}">DOUDOU</span></li>
-                        <li class="list-group-item"><strong>Email :</strong> <span th:text="${user.email}">alex@example.com</span></li>
-                        <li class="list-group-item"><strong>Rôle :</strong> <span th:text="${user.role}">ROLE_USER</span></li>
-                        <li class="list-group-item"><strong>Solde actuel :</strong> <span th:text="${user.balance} + ' €'">0.00 €</span></li>
-                    </ul>
+                <div class="mb-4">
+                    <div class="d-flex justify-content-between">
+                        <div><strong>Mail</strong></div>
+                        <div><span th:text="${user.email}">nom@domain.com</span></div>
+                    </div>
                 </div>
-                <div class="card-footer d-flex justify-content-between">
-                    <a href="/dashboard" class="btn btn-outline-secondary">Retour</a>
-                    <a href="/users/change-password" class="btn btn-warning">Modifier le mot de passe</a>
+                <div class="mb-4">
+                    <div class="d-flex justify-content-between">
+                        <div><strong>Mot de passe</strong></div>
+                        <div>mot de passe</div>
+                    </div>
+                </div>
+                <div class="text-end">
+                    <a href="/users/change-password" class="btn btn-warning">Modifier</a>
                 </div>
             </div>
         </div>
     </div>
 </div>
+
 </body>
 </html>

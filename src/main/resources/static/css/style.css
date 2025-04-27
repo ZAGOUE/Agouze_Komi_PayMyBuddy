@@ -1,4 +1,90 @@
+/* Style original pour la navbar */
 .navbar-dark .navbar-nav .nav-link {
     color: #ffffff !important;
     font-weight: 500;
 }
+/* style du menu */
+.navbar {
+    background-color: white !important;
+}
+
+.navbar-nav .nav-link {
+    color: black !important;
+    font-weight: 500;
+    margin-right: 20px;
+}
+
+.navbar-nav .nav-link.active,
+.navbar-nav .nav-link:focus,
+.navbar-nav .nav-link:hover {
+    color: dodgerblue !important;
+    font-weight: bold;
+}
+
+
+.navbar-brand {
+    margin-right: 120px;
+    color: #000000 !important;
+    font-weight: bold;
+}
+
+/*  page de login et register */
+
+body.login-body,
+body.register-body {
+    background-color: #f8f9fa;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    font-family: Arial, sans-serif;
+}
+
+.login-container,
+.container-register {
+    width: 350px;
+    background-color: #ffffff;
+    padding: 40px;
+    border: 1px solid #ddd;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    border-radius: 5px;
+    text-align: center;
+}
+
+.login-title,
+.brand-title {
+    color: #ffffff;
+    background-color: #ffa500;
+    padding: 10px;
+    border-radius: 5px;
+    margin-bottom: 20px;
+    font-weight: bold;
+    font-size: 20px;
+    display: inline-block;
+}
+
+input.form-control {
+    margin-bottom: 15px;
+}
+
+body.login-body,
+body.register-body {
+    background-color: #f8f9fa;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    font-family: Arial, sans-serif;
+}
+.btn-login {
+    background-color: #0d6efd;
+    border-color: #0d6efd;
+    color: #ffffff;
+    width: 100%;
+    margin-top: 20px;
+    padding: 10px 0;
+    font-weight: bold;
+    border-radius: 5px;
+}
+
+
